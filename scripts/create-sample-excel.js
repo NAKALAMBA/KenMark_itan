@@ -1,0 +1,80 @@
+/**
+ * Script to create a sample Excel knowledge base file
+ * Run with: node scripts/create-sample-excel.js
+ */
+
+const XLSX = require('xlsx');
+
+const sampleData = [
+  {
+    Category: 'About',
+    Question: 'What is Kenmark ITan Solutions?',
+    Answer: 'Kenmark ITan Solutions is a leading technology company focused on delivering cutting-edge AI solutions, consulting services, and comprehensive training programs. We help businesses transform their operations through innovative technology.'
+  },
+  {
+    Category: 'About',
+    Question: 'What is your mission?',
+    Answer: 'Our mission is to empower organizations with intelligent solutions that drive growth and efficiency. We strive to be a trusted technology partner for businesses seeking digital transformation.'
+  },
+  {
+    Category: 'Services',
+    Question: 'What services do you offer?',
+    Answer: 'We offer three main services: 1) AI Solutions - Custom AI implementations tailored to your business needs, 2) Consulting - Expert technology consulting to guide your digital transformation, and 3) Training - Comprehensive training programs to upskill your team.'
+  },
+  {
+    Category: 'Services',
+    Question: 'Do you provide AI consulting?',
+    Answer: 'Yes, we provide expert AI consulting services. Our team helps businesses identify opportunities for AI implementation, develop strategies, and execute AI projects that deliver real business value.'
+  },
+  {
+    Category: 'Services',
+    Question: 'What kind of training programs do you offer?',
+    Answer: 'We offer comprehensive training programs covering AI fundamentals, machine learning, data science, cloud technologies, and software development. Our training is designed to upskill teams and prepare them for the future of technology.'
+  },
+  {
+    Category: 'FAQ',
+    Question: 'How can I contact Kenmark ITan Solutions?',
+    Answer: 'You can contact us by visiting our website at kenmarkitan.com. We have a contact form and contact information available on our website. We would be happy to assist you with your inquiries.'
+  },
+  {
+    Category: 'FAQ',
+    Question: 'Where is your company located?',
+    Answer: 'For location and office details, please visit our website at kenmarkitan.com or contact us through the contact form. We serve clients globally and have a strong online presence.'
+  },
+  {
+    Category: 'FAQ',
+    Question: 'Do you work with small businesses?',
+    Answer: 'Yes, we work with businesses of all sizes, from startups to large enterprises. Our solutions are scalable and can be tailored to meet the specific needs and budget of small businesses.'
+  },
+  {
+    Category: 'FAQ',
+    Question: 'What industries do you serve?',
+    Answer: 'We serve a wide range of industries including healthcare, finance, retail, manufacturing, education, and technology. Our AI solutions and consulting services are adaptable to various industry requirements.'
+  },
+  {
+    Category: 'Contact',
+    Question: 'How do I get a quote?',
+    Answer: 'To get a quote for our services, please visit kenmarkitan.com and fill out our contact form. Our team will get back to you with a customized proposal based on your requirements.'
+  },
+  {
+    Category: 'Contact',
+    Question: 'Do you offer free consultations?',
+    Answer: 'Yes, we offer initial consultations to understand your needs and discuss how our services can help your business. Please contact us through our website to schedule a consultation.'
+  }
+];
+
+// Create a new workbook
+const workbook = XLSX.utils.book_new();
+
+// Convert data to worksheet
+const worksheet = XLSX.utils.json_to_sheet(sampleData);
+
+// Add worksheet to workbook
+XLSX.utils.book_append_sheet(workbook, worksheet, 'Knowledge Base');
+
+// Write to file
+XLSX.writeFile(workbook, 'public/knowledge-base.xlsx');
+
+console.log('✅ Sample Excel file created at public/knowledge-base.xlsx');
+console.log(`📊 Created ${sampleData.length} knowledge entries`);
+
