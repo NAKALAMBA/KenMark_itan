@@ -41,7 +41,8 @@ export async function retrieveRelevantKnowledge(query: string): Promise<string> 
       // Return only the first relevant answer, clean format
       return generalInfo[0].answer;
     }
-    return '';
+    // If no knowledge base exists, return helpful message
+    return 'No knowledge base content available. Please upload an Excel file with FAQs, Services, and About information via the admin panel.';
   }
 
   // Return only the most relevant answer (top result), clean format without Q/A labels
