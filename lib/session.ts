@@ -53,30 +53,27 @@ export async function getSessionMessages(sessionId: string) {
 }
 
 export async function saveMessage(sessionId: string, role: 'user' | 'assistant', content: string) {
-  const session = await prisma.chatSession.findUnique({
+  // First, find or create session (without nested create to avoid transactions)
+  let session = await prisma.chatSession.findUnique({
     where: { sessionId },
   });
 
   if (!session) {
-    await prisma.chatSession.create({
+    // Create session first
+    session = await prisma.chatSession.create({
       data: {
         sessionId,
-        messages: {
-          create: {
-            role,
-            content,
-          },
-        },
-      },
-    });
-  } else {
-    await prisma.chatMessage.create({
-      data: {
-        sessionId: session.id,
-        role,
-        content,
       },
     });
   }
+
+  // Then create message separately (avoids transaction requirement)
+  await prisma.chatMessage.create({
+    data: {
+      sessionId: session.id,
+      role,
+      content,
+    },
+  });
 }
 
