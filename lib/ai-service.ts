@@ -73,7 +73,12 @@ export async function generateAIResponse(
   context: string,
   conversationHistory: AIMessage[] = []
 ): Promise<string> {
-  const fullContext = context || 'No specific context available.';
+  // If context is empty or indicates no knowledge base, provide helpful response
+  if (!context || context.includes('No knowledge base content available')) {
+    return "I apologize, but I don't have specific information about that yet. The knowledge base hasn't been set up. Please contact us at kenmarkitan.com for more information, or ask the administrator to upload knowledge base content via the admin panel.";
+  }
+  
+  const fullContext = context;
   const systemPrompt = SYSTEM_PROMPT.replace('{context}', fullContext);
 
   const messages: AIMessage[] = [
@@ -156,8 +161,8 @@ async function callGroq(messages: AIMessage[]): Promise<string> {
 function generateFallbackResponse(userQuery: string, context: string): string {
   const lowerQuery = userQuery.toLowerCase();
 
-  // If we have context, return it cleanly (remove any Q/A formatting)
-  if (context && context.length > 0) {
+  // If we have context and it's not the "no knowledge base" message, return it cleanly
+  if (context && context.length > 0 && !context.includes('No knowledge base content available')) {
     // Remove any "Q:" or "A:" labels and category prefixes
     let cleanContext = context
       .replace(/^[^:]+:\s*/g, '') // Remove category prefix like "Hosting: "
@@ -169,6 +174,11 @@ function generateFallbackResponse(userQuery: string, context: string): string {
     if (cleanContext.length > 10) {
       return cleanContext.length > 500 ? cleanContext.substring(0, 500) + '...' : cleanContext;
     }
+  }
+  
+  // If no context or knowledge base empty, provide helpful message
+  if (!context || context.includes('No knowledge base content available')) {
+    return "I don't have that information in my knowledge base yet. Please contact us at kenmarkitan.com for assistance, or ask the administrator to add this information via the admin panel.";
   }
 
   // Simple keyword matching as fallback
